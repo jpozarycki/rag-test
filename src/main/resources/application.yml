@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: rag-test
+app:
+  properties:
+    documentsToLoad:
+      - classpath:doc.txt
