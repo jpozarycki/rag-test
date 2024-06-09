@@ -6,7 +6,7 @@ spring:
       qdrant:
         host: localhost
         port: 6334
-#        collection-name: rag-test
+        collection-name: rag-test
     ollama:
       base-url: http://localhost:11435
       chat:

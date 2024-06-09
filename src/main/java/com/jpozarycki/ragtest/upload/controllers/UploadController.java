@@ -18,7 +18,7 @@ public class UploadController {
 
     @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<PostUploadResponseDTO> upload(@ModelAttribute PostUploadRequestDTO postUploadRequestDTO) {
-        if (postUploadRequestDTO.document().isEmpty()) {
+        if (postUploadRequestDTO.document() == null || postUploadRequestDTO.document().isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
 
