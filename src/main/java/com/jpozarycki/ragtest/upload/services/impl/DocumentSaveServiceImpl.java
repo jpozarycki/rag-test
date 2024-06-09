@@ -1,7 +1,7 @@
 package com.jpozarycki.ragtest.upload.services.impl;
 
-import com.jpozarycki.ragtest.common.model.DocumentModel;
-import com.jpozarycki.ragtest.common.repositories.DocumentModelRepository;
+import com.jpozarycki.ragtest.documentModel.model.DocumentModel;
+import com.jpozarycki.ragtest.documentModel.repositories.DocumentModelRepository;
 import com.jpozarycki.ragtest.upload.services.DocumentSaveService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

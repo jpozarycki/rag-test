@@ -1,4 +1,4 @@
-package com.jpozarycki.ragtest.common.model;
+package com.jpozarycki.ragtest.documentModel.model;
 
 import org.springframework.data.redis.core.RedisHash;
 

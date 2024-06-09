@@ -1,6 +1,6 @@
 package com.jpozarycki.ragtest.upload.services.impl;
 
-import com.jpozarycki.ragtest.common.model.DocumentModel;
+import com.jpozarycki.ragtest.documentModel.model.DocumentModel;
 import com.jpozarycki.ragtest.upload.enums.UploadStatus;
 import com.jpozarycki.ragtest.upload.model.PostUploadRequestDTO;
 import com.jpozarycki.ragtest.upload.model.PostUploadResponseDTO;
@@ -16,7 +16,6 @@ import org.springframework.ai.vectorstore.qdrant.QdrantVectorStore;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -35,11 +34,11 @@ public class UploadServiceImpl implements UploadService {
 
             List<Document> splitDocuments = textSplitter.split(documents);
             vectorStore.add(splitDocuments);
-            DocumentModel documentModel = documentSaveService.saveDocument(postUploadData.fileName());
+            DocumentModel documentModel = documentSaveService.saveDocument(postUploadData.document().getName());
             return new PostUploadResponseDTO(UploadStatus.OK, documentModel.id());
         } catch (RuntimeException ex) {
-            log.error("Error uploading for document: {}", ex.getMessage());
-            return new PostUploadResponseDTO(UploadStatus.REJECTED, null);
+            log.error("Error uploading for document", ex);
+            return new PostUploadResponseDTO(UploadStatus.ERROR, null);
         }
     }
 }

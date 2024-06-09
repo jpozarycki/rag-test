@@ -3,7 +3,7 @@ package com.jpozarycki.ragtest.chat.service.impl;
 import com.jpozarycki.ragtest.chat.model.AnswerDTO;
 import com.jpozarycki.ragtest.chat.model.QuestionDTO;
 import com.jpozarycki.ragtest.chat.service.*;
-import com.jpozarycki.ragtest.common.repositories.DocumentModelRepository;
+import com.jpozarycki.ragtest.documentModel.repositories.DocumentModelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
