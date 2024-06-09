@@ -18,6 +18,10 @@ public class UploadController {
 
     @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<PostUploadResponseDTO> upload(@ModelAttribute PostUploadRequestDTO postUploadRequestDTO) {
+        if (postUploadRequestDTO.document().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
         PostUploadResponseDTO postUploadResponseDTO = uploadService.uploadToVectorStore(postUploadRequestDTO);
         if (UploadStatus.SUCCESS.equals(postUploadResponseDTO.status())) {
             return ResponseEntity.ok(postUploadResponseDTO);
