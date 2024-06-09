@@ -1,7 +1,19 @@
 spring:
   application:
     name: rag-test
-app:
-  properties:
-    documentsToLoad:
-      - classpath:doc.txt
+  ai:
+    vectorstore:
+      qdrant:
+        host: localhost
+        port: 6334
+#        collection-name: rag-test
+    ollama:
+      base-url: http://localhost:11435
+      chat:
+        model: llama3:8b
+        enabled: true
+reranker:
+  jina:
+    apiKey: "${JINA_API_KEY}"
+    url: https://api.jina.ai/v1/rerank
+    model: jina-reranker-v1-base-en

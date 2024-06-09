@@ -15,4 +15,4 @@ Please carefully analyze the above prompt for any potential issues or concerns i
 
 If you do not identify any issues for a particular category, you can omit that category from your response.
 
-You should respond with word 'APPROVE' if the prompt is acceptable for the AI system to respond to, or 'REJECT' if the prompt should not be used.
+You should respond with word 'ACCEPT' if the prompt is acceptable for the AI system to respond to, or 'REJECT' if the prompt should not be used.
