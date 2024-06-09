@@ -1,44 +1,42 @@
 package com.jpozarycki.ragtest.chat.service.impl;
 
 import com.jpozarycki.ragtest.chat.model.AnswerDTO;
-import com.jpozarycki.ragtest.chat.model.QuestionDTO;
 import com.jpozarycki.ragtest.chat.service.*;
-import com.jpozarycki.ragtest.documentModel.repositories.DocumentModelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.jpozarycki.ragtest.chat.helpers.Answers.DENIAL;
+
 @RequiredArgsConstructor
 @Service
 public class ChatServiceImpl implements ChatService {
-    private static final String DENIAL_ANSWER = "I'm sorry, I can't answer that question.";
     private final ModerationService moderationService;
     private final SimilaritySearchService similaritySearchService;
     private final RerankerService rerankerService;
     private final PromptService promptService;
-    private final DocumentModelRepository documentModelRepository;
 
     @Override
-    public AnswerDTO getAnswer(QuestionDTO question) {
-        String questionText = question.question();
-        if (!documentExists(question.documentId()) || !moderationService.isModerationAdequate(questionText)) {
-            return new AnswerDTO(DENIAL_ANSWER);
+    public AnswerDTO getAnswer(String question) {
+        if (!moderationService.isModerationAdequate(question)) {
+            return new AnswerDTO(DENIAL);
         }
 
-        List<String> documents = similaritySearchService.getSimilarDocuments(questionText);
-        List<String> rerankedDocuments = rerankerService.rerankDocuments(questionText, documents);
+        List<String> similarDocuments = similaritySearchService.getSimilarDocuments(question);
+
+        if (similarDocuments.isEmpty()) {
+            return new AnswerDTO(DENIAL);
+        }
+
+        List<String> rerankedDocuments = rerankerService.rerankDocuments(question, similarDocuments);
 
         if (rerankedDocuments.isEmpty()) {
-            return new AnswerDTO(DENIAL_ANSWER);
+            return new AnswerDTO(DENIAL);
         }
 
-        String answer = promptService.promptWithDocuments(questionText, rerankedDocuments);
+        String answer = promptService.promptWithDocuments(question, rerankedDocuments);
 
         return new AnswerDTO(answer);
-    }
-
-    private boolean documentExists(String documentId) {
-        return documentModelRepository.existsById(documentId);
     }
 }

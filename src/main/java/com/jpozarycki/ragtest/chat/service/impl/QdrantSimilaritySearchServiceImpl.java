@@ -16,7 +16,7 @@ public class QdrantSimilaritySearchServiceImpl implements SimilaritySearchServic
     @Override
     public List<String> getSimilarDocuments(String query) {
         SearchRequest searchRequest = SearchRequest.query(query)
-                .withTopK(10);
+                .withTopK(15);
         return vectorStore.similaritySearch(searchRequest)
                 .stream().map(Document::getContent)
                 .toList();

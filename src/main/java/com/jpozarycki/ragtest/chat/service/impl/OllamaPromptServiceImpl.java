@@ -11,14 +11,10 @@ import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.chat.prompt.SystemPromptTemplate;
 import org.springframework.ai.ollama.OllamaChatModel;
-import org.springframework.ai.ollama.api.OllamaModel;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,7 +24,7 @@ public class OllamaPromptServiceImpl implements PromptService {
     private static final String SYSTEM_PROMPT_TEMPLATE = """
             You are an AI assistant whose purpose is to answer questions using only the knowledge provided to you. \
             You cannot make any assumptions or use any outside information. \
-            
+            \
             Carefully review the provided knowledge and determine if the question can be answered using only the facts and information given. \
             Do not make any assumptions or use any outside knowledge. \
             Remember, you must use only the provided knowledge and cannot make any assumptions or use outside information. \
@@ -46,6 +42,7 @@ public class OllamaPromptServiceImpl implements PromptService {
     public String promptWithDocuments(String query, Collection<String> documents) {
         String knowledgeSource = String.join(StringUtils.SPACE, documents);
         log.info("Prompting with documents: {} for query: {}", documents, query);
+
         String systemPrompt = SYSTEM_PROMPT_TEMPLATE.replace(KNOWLEDGE_SOURCE_PLACEHOLDER, knowledgeSource);
         Message systemPromptTemplate = new SystemPromptTemplate(systemPrompt).createMessage();
         Message userPrompt = new PromptTemplate(query).createMessage();

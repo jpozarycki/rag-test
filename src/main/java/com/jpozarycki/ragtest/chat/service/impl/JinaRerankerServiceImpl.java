@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collection;
 import java.util.List;
 
 @Slf4j
@@ -21,37 +20,34 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JinaRerankerServiceImpl implements RerankerService {
     private final int TOP_N = 5;
-    private final double MINIMAL_RELEVANCE = 0.5;
     private final JinaRerankerConfiguration jinaRerankerConfiguration;
+    private final RestTemplate restTemplate;
 
     @Override
-    public List<String> rerankDocuments(String query, Collection<String> documents) {
+    public List<String> rerankDocuments(String query, List<String> documents) {
         HttpEntity<PostJinaRerankerRequestDTO> request = buildRequest(query, documents);
-        RestTemplate restTemplate = new RestTemplate();
         try {
             PostJinaRerankerResponseDTO response = restTemplate.postForObject(jinaRerankerConfiguration.getUrl(), request, PostJinaRerankerResponseDTO.class);
 
             if (response != null) {
                 return response.results().stream()
-//                        .filter(result -> result.relevanceScore() >= MINIMAL_RELEVANCE)
                         .map(PostJinaRerankerResponseDTO.Result::document)
                         .map(PostJinaRerankerResponseDTO.Result.Document::text)
                         .toList();
             }
             return List.of();
         } catch (RestClientException e) {
-            log.error("Error while calling Jina Reranker");
-            throw new RuntimeException(e);
+            log.error("Error while calling Jina Reranker", e);
+            return List.of();
         }
     }
 
-    private HttpEntity<PostJinaRerankerRequestDTO> buildRequest(String query, Collection<String> documents) {
+    private HttpEntity<PostJinaRerankerRequestDTO> buildRequest(String query, List<String> documents) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-//        headers.setBearerAuth(jinaRerankerConfiguration.getApiKey());
         log.info("API KEY: {}", jinaRerankerConfiguration.getApiKey());
         headers.set("Authorization", "Bearer " + jinaRerankerConfiguration.getApiKey());
-        PostJinaRerankerRequestDTO request = new PostJinaRerankerRequestDTO(jinaRerankerConfiguration.getModel(), query, List.copyOf(documents), TOP_N);
+        PostJinaRerankerRequestDTO request = new PostJinaRerankerRequestDTO(jinaRerankerConfiguration.getModel(), query, documents, TOP_N);
         return new HttpEntity<>(request, headers);
     }
 }

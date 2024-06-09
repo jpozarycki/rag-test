@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class DocumentSaveServiceImplTest {
@@ -29,10 +28,10 @@ class DocumentSaveServiceImplTest {
     @Test
     void saveDocument_returnsDocumentWithSameFileName() {
         DocumentModel testDocumentModel = new DocumentModel(DOCUMENT_ID, FILE_NAME);
-        when(documentModelRepository.save(any(DocumentModel.class))).thenReturn(testDocumentModel);
+        when(documentModelRepository.save(argThat(dm -> FILE_NAME.equals(dm.fileName())))).thenReturn(testDocumentModel);
 
         DocumentModel savedDocumentModel = documentSaveService.saveDocument(FILE_NAME);
 
-        assertEquals(savedDocumentModel.fileName(), FILE_NAME);
+        assertEquals(testDocumentModel.fileName(), savedDocumentModel.fileName());
     }
 }

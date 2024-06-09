@@ -48,8 +48,8 @@ class UploadServiceImplTest {
 
         PostUploadResponseDTO responseDTO = uploadService.uploadToVectorStore(testPostUploadRequestDTO);
 
-        assertEquals(responseDTO.status(), UploadStatus.SUCCESS);
-        assertEquals(responseDTO.documentId(), DOCUMENT_ID);
+        assertEquals(UploadStatus.SUCCESS, responseDTO.status());
+        assertEquals(DOCUMENT_ID, responseDTO.documentId());
     }
 
     @Test
@@ -60,7 +60,7 @@ class UploadServiceImplTest {
 
         PostUploadResponseDTO responseDTO = uploadService.uploadToVectorStore(testPostUploadRequestDTO);
 
-        assertEquals(responseDTO.status(), UploadStatus.ERROR);
+        assertEquals(UploadStatus.ERROR, responseDTO.status());
         assertNull(responseDTO.documentId());
     }
 }

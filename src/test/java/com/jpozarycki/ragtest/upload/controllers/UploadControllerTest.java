@@ -7,6 +7,7 @@ import com.jpozarycki.ragtest.upload.services.UploadService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,8 +46,9 @@ class UploadControllerTest {
         ResponseEntity<PostUploadResponseDTO> responseDTO = uploadController.upload(uploadRequestDTO);
 
         assertNotNull(responseDTO.getBody());
-        assertEquals(responseDTO.getBody().status(), UploadStatus.SUCCESS);
-        assertEquals(responseDTO.getBody().documentId(), DOCUMENT_ID);
+        assertEquals(HttpStatus.OK.value(), responseDTO.getStatusCode().value());
+        assertEquals(UploadStatus.SUCCESS, responseDTO.getBody().status());
+        assertEquals(DOCUMENT_ID, responseDTO.getBody().documentId());
     }
 
     @Test
@@ -58,8 +60,9 @@ class UploadControllerTest {
 
         ResponseEntity<PostUploadResponseDTO> responseDTO = uploadController.upload(uploadRequestDTO);
 
+        assertEquals(HttpStatus.BAD_REQUEST.value(), responseDTO.getStatusCode().value());
         assertNotNull(responseDTO.getBody());
-        assertEquals(responseDTO.getBody().status(), UploadStatus.ERROR);
+        assertEquals(UploadStatus.ERROR, responseDTO.getBody().status());
         assertNull(responseDTO.getBody().documentId());
     }
 }

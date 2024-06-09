@@ -34,7 +34,7 @@ public class OllamaModerationServiceImpl implements ModerationService {
     public boolean isModerationAdequate(String question) {
         BeanOutputConverter<GetModerationAdequateResponseDTO> chatResponseParser = new BeanOutputConverter<>(GetModerationAdequateResponseDTO.class);
 
-        Message systemMessage = messageHelper.getMessage(moderationSystemPrompt);
+        Message systemMessage = messageHelper.getSystemMessage(moderationSystemPrompt);
         Message userMessage = messageHelper.getMessage(moderationUserPrompt, Map.of("prompt", question, "format", chatResponseParser.getFormat()));
 
         ChatResponse chatResponse = chatModel.call(new Prompt(List.of(systemMessage, userMessage)));

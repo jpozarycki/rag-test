@@ -8,7 +8,7 @@ public record PostJinaRerankerResponseDTO(@JsonProperty String model,
                                           @JsonProperty Usage usage,
                                           @JsonProperty List<Result> results) {
     public record Usage(@JsonProperty("total_tokens") int totalTokens,
-                        @JsonProperty("prompt_tokens") int prompt_tokens) {
+                        @JsonProperty("prompt_tokens") int promptTokens) {
     }
 
     public record Result(@JsonProperty int index,

@@ -18,13 +18,6 @@ public class MessageHelperImpl implements MessageHelper {
         return promptTemplate.createMessage();
     }
 
-
-    @Override
-    public Message getMessage(Resource promptTemplateResource) {
-        PromptTemplate promptTemplate = new PromptTemplate(promptTemplateResource);
-        return promptTemplate.createMessage();
-    }
-
     @Override
     public Message getMessage(Resource promptTemplateResource, Map<String, Object> propertiesMap) {
         PromptTemplate promptTemplate = new PromptTemplate(promptTemplateResource, propertiesMap);
