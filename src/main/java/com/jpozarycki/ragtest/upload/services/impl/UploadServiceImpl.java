@@ -35,7 +35,7 @@ public class UploadServiceImpl implements UploadService {
             List<Document> splitDocuments = textSplitter.split(documents);
             vectorStore.add(splitDocuments);
             DocumentModel documentModel = documentSaveService.saveDocument(postUploadData.document().getName());
-            return new PostUploadResponseDTO(UploadStatus.OK, documentModel.id());
+            return new PostUploadResponseDTO(UploadStatus.SUCCESS, documentModel.id());
         } catch (RuntimeException ex) {
             log.error("Error uploading for document", ex);
             return new PostUploadResponseDTO(UploadStatus.ERROR, null);
