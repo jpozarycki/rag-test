@@ -61,4 +61,24 @@ class ChatControllerTest {
         assertEquals(HttpStatus.NOT_FOUND.value(), responseDTO.getStatusCode().value());
         verify(chatService, never()).getAnswer(anyString());
     }
+
+    @Test
+    void getAnswer_returnsBadRequestOnEmptyQuestion() {
+        QuestionDTO questionDTO = new QuestionDTO(DOCUMENT_ID, "");
+
+        ResponseEntity<AnswerDTO> responseDTO = chatController.getAnswer(questionDTO);
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), responseDTO.getStatusCode().value());
+        verify(chatService, never()).getAnswer(anyString());
+    }
+
+    @Test
+    void getAnswer_returnsBadRequestOnNullQuestion() {
+        QuestionDTO questionDTO = new QuestionDTO(DOCUMENT_ID, null);
+
+        ResponseEntity<AnswerDTO> responseDTO = chatController.getAnswer(questionDTO);
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), responseDTO.getStatusCode().value());
+        verify(chatService, never()).getAnswer(anyString());
+    }
 }

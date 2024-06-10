@@ -25,15 +25,18 @@ public class JinaRerankerServiceImpl implements RerankerService {
 
     @Override
     public List<String> rerankDocuments(String query, List<String> documents) {
+        log.info("Reranking documents: {} for query: {}", documents, query);
         HttpEntity<PostJinaRerankerRequestDTO> request = buildRequest(query, documents);
         try {
             PostJinaRerankerResponseDTO response = restTemplate.postForObject(jinaRerankerConfiguration.getUrl(), request, PostJinaRerankerResponseDTO.class);
 
             if (response != null) {
-                return response.results().stream()
+                List<String> rerankedDocs = response.results().stream()
                         .map(PostJinaRerankerResponseDTO.Result::document)
                         .map(PostJinaRerankerResponseDTO.Result.Document::text)
                         .toList();
+                log.info("Reranked documents: {} for query: {}", rerankedDocs, query);
+                return rerankedDocs;
             }
             return List.of();
         } catch (RestClientException e) {
@@ -45,7 +48,6 @@ public class JinaRerankerServiceImpl implements RerankerService {
     private HttpEntity<PostJinaRerankerRequestDTO> buildRequest(String query, List<String> documents) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        log.info("API KEY: {}", jinaRerankerConfiguration.getApiKey());
         headers.set("Authorization", "Bearer " + jinaRerankerConfiguration.getApiKey());
         PostJinaRerankerRequestDTO request = new PostJinaRerankerRequestDTO(jinaRerankerConfiguration.getModel(), query, documents, TOP_N);
         return new HttpEntity<>(request, headers);

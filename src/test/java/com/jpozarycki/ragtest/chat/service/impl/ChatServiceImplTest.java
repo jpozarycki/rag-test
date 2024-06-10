@@ -1,6 +1,6 @@
 package com.jpozarycki.ragtest.chat.service.impl;
 
-import com.jpozarycki.ragtest.chat.helpers.Answers;
+import com.jpozarycki.ragtest.helpers.Answers;
 import com.jpozarycki.ragtest.chat.model.AnswerDTO;
 import com.jpozarycki.ragtest.chat.service.*;
 import org.junit.jupiter.api.BeforeEach;

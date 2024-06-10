@@ -27,6 +27,7 @@ public class UploadServiceImpl implements UploadService {
     @Override
     public PostUploadResponseDTO uploadToVectorStore(PostUploadRequestDTO postUploadData) {
         try {
+            log.info("Uploading document: {}", postUploadData.document().getName());
             TikaDocumentReader documentReader = new TikaDocumentReader(postUploadData.document().getResource());
             List<Document> documents = documentReader.get();
 
@@ -34,11 +35,13 @@ public class UploadServiceImpl implements UploadService {
 
             List<Document> splitDocuments = textSplitter.split(documents);
             vectorStore.add(splitDocuments);
+            log.info("Document {} uploaded successfully to vector store", postUploadData.document().getName());
             DocumentModel documentModel = documentSaveService.saveDocument(postUploadData.document().getName());
-            return new PostUploadResponseDTO(UploadStatus.SUCCESS, documentModel.id());
+            log.info("Document {} saved to db successfully", postUploadData.document().getName());
+            return new PostUploadResponseDTO(UploadStatus.SUCCESS, documentModel.id(), null);
         } catch (RuntimeException ex) {
             log.error("Error uploading for document", ex);
-            return new PostUploadResponseDTO(UploadStatus.ERROR, null);
+            return new PostUploadResponseDTO(UploadStatus.ERROR, null, ex.getMessage());
         }
     }
 }

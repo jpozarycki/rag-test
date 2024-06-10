@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.jpozarycki.ragtest.helpers.Answers.EMPTY_DOCUMENT;
+
 @RestController
 @RequiredArgsConstructor
 public class UploadController {
@@ -19,7 +21,7 @@ public class UploadController {
     @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<PostUploadResponseDTO> upload(@ModelAttribute PostUploadRequestDTO postUploadRequestDTO) {
         if (postUploadRequestDTO.document() == null || postUploadRequestDTO.document().isEmpty()) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(new PostUploadResponseDTO(UploadStatus.ERROR, null, EMPTY_DOCUMENT));
         }
 
         PostUploadResponseDTO postUploadResponseDTO = uploadService.uploadToVectorStore(postUploadRequestDTO);

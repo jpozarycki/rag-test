@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.jpozarycki.ragtest.helpers.Answers.EMPTY_QUESTION;
+
 @RequiredArgsConstructor
 @RestController
 public class ChatController {
@@ -18,7 +20,10 @@ public class ChatController {
 
     @PostMapping("/question")
     public ResponseEntity<AnswerDTO> getAnswer(@RequestBody QuestionDTO question) {
-        if (!documentModelService.isDocumentModelExist(question.documentId())) {
+        if (question.question() == null || question.question().isEmpty()) {
+            return ResponseEntity.badRequest().body(new AnswerDTO(EMPTY_QUESTION));
+        }
+        if (question.documentId() == null || !documentModelService.isDocumentModelExist(question.documentId())) {
             return ResponseEntity.notFound().build();
         }
         AnswerDTO answerDTO = chatService.getAnswer(question.question());

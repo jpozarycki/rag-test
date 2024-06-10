@@ -32,6 +32,7 @@ public class OllamaModerationServiceImpl implements ModerationService {
 
     @Override
     public boolean isModerationAdequate(String question) {
+        log.info("Checking moderation for question: {}", question);
         BeanOutputConverter<GetModerationAdequateResponseDTO> chatResponseParser = new BeanOutputConverter<>(GetModerationAdequateResponseDTO.class);
 
         Message systemMessage = messageHelper.getSystemMessage(moderationSystemPrompt);
@@ -39,7 +40,7 @@ public class OllamaModerationServiceImpl implements ModerationService {
 
         ChatResponse chatResponse = chatModel.call(new Prompt(List.of(systemMessage, userMessage)));
         String responseContent = chatResponse.getResult().getOutput().getContent();
-        log.info("Moderation response: {}", responseContent);
+        log.info("Moderation response: {} for question: {}", responseContent, question);
         GetModerationAdequateResponseDTO responseDTO = chatResponseParser.convert(responseContent);
         return ModerationAdequate.ACCEPT.equals((responseDTO != null ? responseDTO.adequate() : null) != null ? responseDTO.adequate() : ModerationAdequate.REJECT);
     }

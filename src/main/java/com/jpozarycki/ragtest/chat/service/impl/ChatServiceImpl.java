@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.jpozarycki.ragtest.chat.helpers.Answers.DENIAL;
+import static com.jpozarycki.ragtest.helpers.Answers.DENIAL;
 
 @RequiredArgsConstructor
 @Service

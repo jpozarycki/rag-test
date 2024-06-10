@@ -4,6 +4,7 @@ import com.jpozarycki.ragtest.upload.enums.UploadStatus;
 import com.jpozarycki.ragtest.upload.model.PostUploadRequestDTO;
 import com.jpozarycki.ragtest.upload.model.PostUploadResponseDTO;
 import com.jpozarycki.ragtest.upload.services.UploadService;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -39,7 +40,7 @@ class UploadControllerTest {
     @Test
     void upload_returnsOkOnSuccessStatus() {
         PostUploadRequestDTO uploadRequestDTO = new PostUploadRequestDTO(MOCK_MULTIPART_FILE);
-        PostUploadResponseDTO uploadResponseDTO = new PostUploadResponseDTO(UploadStatus.SUCCESS, DOCUMENT_ID);
+        PostUploadResponseDTO uploadResponseDTO = new PostUploadResponseDTO(UploadStatus.SUCCESS, DOCUMENT_ID, null);
 
         when(uploadService.uploadToVectorStore(eq(uploadRequestDTO))).thenReturn(uploadResponseDTO);
 
@@ -54,9 +55,21 @@ class UploadControllerTest {
     @Test
     void upload_returnsBadRequestOnErrorStatus() {
         PostUploadRequestDTO uploadRequestDTO = new PostUploadRequestDTO(MOCK_MULTIPART_FILE);
-        PostUploadResponseDTO uploadResponseDTO = new PostUploadResponseDTO(UploadStatus.ERROR, null);
+        PostUploadResponseDTO uploadResponseDTO = new PostUploadResponseDTO(UploadStatus.ERROR, null, null);
 
         when(uploadService.uploadToVectorStore(eq(uploadRequestDTO))).thenReturn(uploadResponseDTO);
+
+        ResponseEntity<PostUploadResponseDTO> responseDTO = uploadController.upload(uploadRequestDTO);
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), responseDTO.getStatusCode().value());
+        assertNotNull(responseDTO.getBody());
+        assertEquals(UploadStatus.ERROR, responseDTO.getBody().status());
+        assertNull(responseDTO.getBody().documentId());
+    }
+
+    @Test
+    void upload_returnsBadRequestOnNullDocument() {
+        PostUploadRequestDTO uploadRequestDTO = new PostUploadRequestDTO(null);
 
         ResponseEntity<PostUploadResponseDTO> responseDTO = uploadController.upload(uploadRequestDTO);
 
