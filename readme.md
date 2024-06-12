@@ -51,21 +51,21 @@ Submits a question to the system.
 
 #### Request
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| questionText | String | The text of the question. |
+| Parameter  | Type | Description                                                 |
+|------------|------|-------------------------------------------------------------|
+| question   | String | The text of the question.                                   |
+| documentId | String | The id of the document that you want to ask question about. |
 
 #### Response
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| status | Enum (QuestionStatus) | The status of the question submission. Can be `SUCCESS` or `ERROR`. |
-| questionId | String | The ID of the submitted question. This is null if the submission was not successful. |
-| errorMessage | String | The error message if the question submission was not successful. This is null if the submission was successful. |
+| Parameter | Type   | Description |
+|-----------|--------|-------------|
+| answer    | String | An answer to the question. Can also contain error message. |
 
 #### Status Codes
 
-| Status Code | Description |
-|-------------|-------------|
-| 200 | The question was successfully submitted. |
-| 400 | The question could not be submitted due to an error or because the question text was null or empty. |
+| Status Code | Description                                                                      |
+|-------------|----------------------------------------------------------------------------------|
+| 200         | The question was successfully submitted.                                         |
+| 400         | The question could not be submitted because the question text was null or empty. |
+| 404         | The documentId was null or could not be found.                                   |
